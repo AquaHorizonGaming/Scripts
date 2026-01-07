@@ -1,0 +1,118 @@
+! =====================================================
+! MASTER HOUSEHOLD WHITELIST
+! Purpose: Prevent breaking normal apps, updates, games,
+! printers, launchers, AI tools, and infrastructure
+! Priority: TOP OF ALL FILTERS
+! =====================================================
+
+
+! =====================================================
+! AI / CHAT APPS
+! =====================================================
+@@||chai-research.com^
+@@||chai.ai^
+@@||c.ai^
+@@||api.chai.ai^
+@@||chai.ai^$websocket
+@@||c.ai^$websocket
+
+! =====================================================
+! MICROSOFT / WINDOWS (UPDATES + AUTH)
+! =====================================================
+@@||microsoft.com^
+@@||windowsupdate.com^
+@@||update.microsoft.com^
+@@||download.windowsupdate.com^
+@@||delivery.mp.microsoft.com^
+@@||dl.delivery.mp.microsoft.com^
+@@||login.microsoftonline.com^
+@@||graph.microsoft.com^
+@@||office.com^
+
+! =====================================================
+! STEAM (GAMES, UPDATES, MULTIPLAYER)
+! =====================================================
+@@||steampowered.com^
+@@||steamcommunity.com^
+@@||steamcontent.com^
+@@||steamstatic.com^
+@@||steamcdn-a.akamaihd.net^
+@@||steamcdn.com^
+
+! =====================================================
+! EPIC GAMES
+! =====================================================
+@@||epicgames.com^
+@@||epicgamescdn.com^
+@@||epicgamesusercontent.com^
+@@||launcher-public-service-prod06.ol.epicgames.com^
+
+! =====================================================
+! GAME AUTH / INFRA (NOT ADS)
+! =====================================================
+@@||playfabapi.com^
+@@||playfab.com^
+@@||xboxlive.com^
+@@||xboxservices.com^
+@@||ea.com^
+@@||origin.com^
+@@||ubisoft.com^
+@@||uplay.com^
+
+! =====================================================
+! BAMBU LAB (3D PRINTERS)
+! =====================================================
+@@||bambulab.com^
+@@||api.bambulab.com^
+@@||cloud.bambulab.com^
+@@||iot.bambulab.com^
+@@||mqtt.bambulab.com^
+
+! =====================================================
+! RESIN PRINTERS / MAKER TOOLS
+! =====================================================
+@@||anycubic.com^
+@@||elegoo.com^
+@@||phrozen3d.com^
+@@||formlabs.com^
+
+! =====================================================
+! DRIVER / DEVICE CDNs
+! =====================================================
+@@||akamaiedge.net^
+@@||akamaitechnologies.com^
+@@||cloudfront.net^
+@@||fastly.net^
+
+! =====================================================
+! AUTH / SECURITY / CORE WEB
+! =====================================================
+@@||cloudflare.com^
+@@||challenges.cloudflare.com^
+@@||auth0.com^
+@@||okta.com^
+
+! =====================================================
+! GOOGLE CORE (NOT ADS)
+! =====================================================
+@@||googleapis.com^
+@@||gstatic.com^
+@@||firebaseio.com^
+@@||clients4.google.com^
+
+! =====================================================
+! ERROR REPORTING (SAFE – NOT ADS)
+! =====================================================
+@@||sentry.io^
+@@||ingest.sentry.io^
+
+! =====================================================
+! TIME / CERTS / OS HEALTH
+! =====================================================
+@@||time.windows.com^
+@@||digicert.com^
+@@||letsencrypt.org^
+
+! =====================================================
+! END MASTER HOUSEHOLD WHITELIST
+! =====================================================
