@@ -1,118 +1,164 @@
-! =====================================================
-! MASTER HOUSEHOLD WHITELIST
-! Purpose: Prevent breaking normal apps, updates, games,
-! printers, launchers, AI tools, and infrastructure
-! Priority: TOP OF ALL FILTERS
-! =====================================================
+! =====================================================================
+! MASTER UNBLOCK / WHITELIST
+! ---------------------------------------------------------------------
+! Scope (INTENTIONAL):
+! - AI chat platforms (ChatGPT-like)
+! - PC game platforms (Steam, Epic, EA, etc.)
+! - Maker / 3D printing ecosystems
+! - Network infrastructure (TP-Link, Ubiquiti)
+! - Commonly-blocked infra required for these to function
+!
+! No ads. No trackers. No mobile game SDKs.
+! =====================================================================
 
 
-! =====================================================
-! AI / CHAT APPS
-! =====================================================
-@@||chai-research.com^
+! =====================================================================
+! AI / CHAT PLATFORMS (COMMON FALSE POSITIVES)
+! ---------------------------------------------------------------------
+! These rely on WebSockets, APIs, and CDNs often misclassified as tracking
+! =====================================================================
+
+! --- OpenAI / ChatGPT ---
+@@||openai.com^
+@@||chat.openai.com^
+@@||api.openai.com^
+@@||auth.openai.com^
+@@||oaistatic.com^
+@@||oaiusercontent.com^
+@@||openai.com^$websocket
+@@||chat.openai.com^$websocket
+
+! --- CHAI ---
 @@||chai.ai^
 @@||c.ai^
-@@||api.chai.ai^
+@@||chai-research.com^
 @@||chai.ai^$websocket
 @@||c.ai^$websocket
 
-! =====================================================
-! MICROSOFT / WINDOWS (UPDATES + AUTH)
-! =====================================================
-@@||microsoft.com^
-@@||windowsupdate.com^
-@@||update.microsoft.com^
-@@||download.windowsupdate.com^
-@@||delivery.mp.microsoft.com^
-@@||dl.delivery.mp.microsoft.com^
-@@||login.microsoftonline.com^
-@@||graph.microsoft.com^
-@@||office.com^
+! --- Anthropic / Claude ---
+@@||anthropic.com^
+@@||claude.ai^
+@@||api.anthropic.com^
+@@||claude.ai^$websocket
 
-! =====================================================
-! STEAM (GAMES, UPDATES, MULTIPLAYER)
-! =====================================================
+! --- Google AI / Gemini ---
+@@||ai.google.com^
+@@||generativeai.googleapis.com^
+
+
+! =====================================================================
+! PC GAME PLATFORMS (INFRA ONLY — NOT ADS)
+! ---------------------------------------------------------------------
+! Required for installs, updates, auth, multiplayer
+! =====================================================================
+
+! --- Steam ---
 @@||steampowered.com^
 @@||steamcommunity.com^
 @@||steamcontent.com^
 @@||steamstatic.com^
-@@||steamcdn-a.akamaihd.net^
 @@||steamcdn.com^
+@@||steamcdn-a.akamaihd.net^
 
-! =====================================================
-! EPIC GAMES
-! =====================================================
+! --- Epic Games ---
 @@||epicgames.com^
 @@||epicgamescdn.com^
 @@||epicgamesusercontent.com^
 @@||launcher-public-service-prod06.ol.epicgames.com^
 
-! =====================================================
-! GAME AUTH / INFRA (NOT ADS)
-! =====================================================
-@@||playfabapi.com^
-@@||playfab.com^
-@@||xboxlive.com^
-@@||xboxservices.com^
+! --- EA ---
 @@||ea.com^
 @@||origin.com^
+@@||eaassets-a.akamaihd.net^
+
+! --- Ubisoft ---
 @@||ubisoft.com^
 @@||uplay.com^
 
-! =====================================================
-! BAMBU LAB (3D PRINTERS)
-! =====================================================
+! --- Microsoft / Xbox Services ---
+@@||xboxlive.com^
+@@||xboxservices.com^
+
+
+! =====================================================================
+! MAKERSPACE / 3D PRINTING ECOSYSTEM
+! ---------------------------------------------------------------------
+! Blocking these breaks slicers, firmware updates, cloud control
+! =====================================================================
+
+! --- Bambu Lab ---
 @@||bambulab.com^
 @@||api.bambulab.com^
 @@||cloud.bambulab.com^
 @@||iot.bambulab.com^
 @@||mqtt.bambulab.com^
 
-! =====================================================
-! RESIN PRINTERS / MAKER TOOLS
-! =====================================================
+! --- Anycubic ---
 @@||anycubic.com^
+
+! --- Elegoo ---
 @@||elegoo.com^
+
+! --- Phrozen ---
 @@||phrozen3d.com^
+
+! --- Formlabs ---
 @@||formlabs.com^
 
-! =====================================================
-! DRIVER / DEVICE CDNs
-! =====================================================
-@@||akamaiedge.net^
-@@||akamaitechnologies.com^
-@@||cloudfront.net^
-@@||fastly.net^
 
-! =====================================================
-! AUTH / SECURITY / CORE WEB
-! =====================================================
-@@||cloudflare.com^
-@@||challenges.cloudflare.com^
-@@||auth0.com^
-@@||okta.com^
+! =====================================================================
+! NETWORK INFRASTRUCTURE (ROUTERS / APs / CONTROLLERS)
+! ---------------------------------------------------------------------
+! These are often blocked due to telemetry assumptions
+! =====================================================================
 
-! =====================================================
-! GOOGLE CORE (NOT ADS)
-! =====================================================
-@@||googleapis.com^
-@@||gstatic.com^
-@@||firebaseio.com^
-@@||clients4.google.com^
+! --- TP-Link (Omada / Consumer) ---
+@@||tp-link.com^
+@@||tplinkcloud.com^
+@@||tplinkwifi.net^
 
-! =====================================================
-! ERROR REPORTING (SAFE – NOT ADS)
-! =====================================================
-@@||sentry.io^
-@@||ingest.sentry.io^
+! --- Ubiquiti / UniFi ---
+@@||ui.com^
+@@||ubnt.com^
+@@||unifi.ui.com^
 
-! =====================================================
-! TIME / CERTS / OS HEALTH
-! =====================================================
+
+! =====================================================================
+! CORE CONNECTIVITY SUPPORT (COMMON FALSE POSITIVES)
+! ---------------------------------------------------------------------
+! Needed for TLS, DNS health, and real-time connections
+! =====================================================================
+
+! --- DNS & connectivity checks ---
+@@||dns.google^
+@@||cloudflare-dns.com^
+@@||quad9.net^
+
+@@||connectivitycheck.gstatic.com^
+@@||msftconnecttest.com^
+@@||www.msftconnecttest.com^
+
+! --- Time sync (cert validation depends on this) ---
 @@||time.windows.com^
-@@||digicert.com^
-@@||letsencrypt.org^
+@@||time.google.com^
+@@||pool.ntp.org^
 
-! =====================================================
-! END MASTER HOUSEHOLD WHITELIST
-! =====================================================
+
+! =====================================================================
+! CODE / BLOCKLIST HOSTING (CRITICAL)
+! ---------------------------------------------------------------------
+! Your adblock lists and scripts live here
+! =====================================================================
+
+@@||github.com^
+@@||raw.githubusercontent.com^
+@@||api.github.com^
+@@||objects.githubusercontent.com^
+@@||releases.githubusercontent.com^
+@@||githubusercontent.com^
+@@||github.io^
+
+
+! =====================================================================
+! END MASTER UNBLOCK / WHITELIST
+! =====================================================================
