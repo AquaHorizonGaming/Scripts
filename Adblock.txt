@@ -1,0 +1,89 @@
+! =====================================================
+! GAME ADS / MOBILE ADS / UNITY ADS - BLACK HOLE LIST
+! Purpose: Block Unity Ads, mobile game ads, trackers
+! Compatible with: AdGuard Home, AdGuard DNS, AdGuard App
+! =====================================================
+
+! ---------- Unity Ads ----------
+||unityads.unity3d.com^
+||config.unityads.unity3d.com^
+||webview.unityads.unity3d.com^
+||ads.unityads.unity3d.com^
+||stats.unityads.unity3d.com^
+||events.unityads.unity3d.com^
+||tracking.unityads.unity3d.com^
+
+! ---------- Unity Analytics ----------
+||unityanalytics.com^
+||analytics.unity3d.com^
+
+! ---------- Tenjin (Mobile Attribution / Tracking) ----------
+||track.tenjin.com^
+||analytics.tenjin.com^
+||api.tenjin.com^
+
+! ---------- AppLovin ----------
+||applovin.com^
+||ads.applovin.com^
+||ms.applovin.com^
+||d.applovin.com^
+
+! ---------- IronSource ----------
+||ironsource.com^
+||ads.ironsource.com^
+||analytics.ironsource.com^
+
+! ---------- Chartboost ----------
+||chartboost.com^
+||ads.chartboost.com^
+||static.chartboost.com^
+
+! ---------- AdColony ----------
+||adcolony.com^
+||ads.adcolony.com^
+
+! ---------- Vungle ----------
+||vungle.com^
+||ads.vungle.com^
+
+! ---------- Mintegral ----------
+||mintegral.com^
+||ads.mintegral.com^
+
+! ---------- Fyber ----------
+||fyber.com^
+||ads.fyber.com^
+
+! ---------- InMobi ----------
+||inmobi.com^
+||ads.inmobi.com^
+
+! ---------- Google Mobile Ads ----------
+||googleads.g.doubleclick.net^
+||mobileads.google.com^
+||pagead2.googlesyndication.com^
+
+! ---------- Facebook / Meta Game Ads ----------
+||graph.facebook.com^
+||ads.mopub.com^
+
+! ---------- TikTok Ads ----------
+||ads.tiktok.com^
+||analytics.tiktok.com^
+
+! ---------- Brave Ads ----------
+||ads-serve.brave.com^
+
+! ---------- Misc Game Ad Services ----------
+||adservice.google.com^
+||adservice.googleusercontent.com^
+||app-measurement.com^
+
+! ---------- Reward Video / Offerwall Networks ----------
+||supersonicads.com^
+||offerwallads.com^
+||tapjoy.com^
+
+! =====================================================
+! END GAME ADS BLACK HOLE
+! =====================================================
