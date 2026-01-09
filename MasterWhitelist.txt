@@ -17,6 +17,10 @@
 ! - Network infrastructure vendors
 ! - Social platforms with fragile media stacks (Instagram)
 ! - Code & blocklist hosting (GitHub)
+! - sms
+! - rcs
+! - mms
+!
 !
 ! EXCLUDED BY DESIGN:
 ! - Advertising networks
