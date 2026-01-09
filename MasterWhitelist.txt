@@ -413,6 +413,86 @@
 @@||github.io^
 
 
+! #####################################################################
+! GROUP 10 — MESSAGING (RCS / iOS RCS / SMS / MMS)
+! #####################################################################
+! PURPOSE: Ensures reliable messaging across Android and iOS by allowing
+!          required services for RCS (Google Jibe), Apple Messages,
+!          SMS fallback, MMS delivery, presence, and push notifications.
+
+##################################################
+## MESSAGING (RCS / iOS RCS / SMS / MMS SUPPORT) ##
+##################################################
+
+
+# --- Google RCS presence & real-time messaging ---
+mtalk.google.com
+mtalk4.google.com
+alt1-mtalk.google.com
+alt2-mtalk.google.com
+alt3-mtalk.google.com
+alt4-mtalk.google.com
+
+
+# --- Google RCS core services ---
+rcs.google.com
+rcs-acs-prod.google.com
+rcs-acs-prod-us.sandbox.google.com
+
+
+# --- Google Jibe RCS backend ---
+jibe.google.com
+jibe-rcs.google.com
+jibe-rcs-edge.googleapis.com
+jibe-rcs-ingestion.googleapis.com
+
+
+# --- Google push / background delivery ---
+firebaseinstallations.googleapis.com
+firebase.googleapis.com
+fcm.googleapis.com
+
+
+# --- Google connectivity checks ---
+connectivitycheck.gstatic.com
+clients3.google.com
+
+
+# ==================================================
+# APPLE MESSAGES (iOS RCS / SMS / MMS / iMessage)
+# ==================================================
+
+# --- Apple push & messaging transport ---
+push.apple.com
+init.push.apple.com
+feedback.push.apple.com
+
+# --- Apple identity / messaging auth ---
+gateway.icloud.com
+identity.apple.com
+setup.icloud.com
+
+# --- Apple messaging service discovery ---
+gsp-ssl.ls.apple.com
+gsp64-ssl.ls.apple.com
+
+# --- Apple carrier / message update services ---
+mesu.apple.com
+
+
+# ==================================================
+# SMS / MMS CARRIER SUPPORT (GENERIC / SAFE)
+# ==================================================
+
+# --- MMS helpers used by many carriers ---
+mms.apple.com
+mmsc.mobile.att.net
+mms.vtext.com
+mms.mycricket.com
+mms.t-mobile.com
+mms.uscc.net
+
+
 ! =====================================================================
 ! END MASTER UNBLOCK / WHITELIST
 ! =====================================================================
