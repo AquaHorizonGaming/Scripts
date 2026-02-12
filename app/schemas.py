@@ -1,24 +1,33 @@
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel, EmailStr
+
+from pydantic import BaseModel, ConfigDict
+
 
 class UserCreate(BaseModel):
-    email: EmailStr
+    email: str
     password: str
     role: str = 'customer'
 
+
 class UserRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
-    email: EmailStr
+    email: str
     role: str
     is_verified: bool
 
-    class Config:
-        orm_mode = True
 
 class Token(BaseModel):
     access_token: str
     token_type: str = 'bearer'
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
 
 class ProductCreate(BaseModel):
     name: str
@@ -26,14 +35,15 @@ class ProductCreate(BaseModel):
     image_url: Optional[str] = None
     store_id: int = 1
 
+
 class ProductRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     name: str
     price_customer: Optional[float]
     image_url: Optional[str]
 
-    class Config:
-        orm_mode = True
 
 class AddressCreate(BaseModel):
     street: str
@@ -41,24 +51,26 @@ class AddressCreate(BaseModel):
     state: str
     zip_code: str
 
+
 class AddressRead(AddressCreate):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
 
-    class Config:
-        orm_mode = True
 
 class OrderItemCreate(BaseModel):
     product_id: int
     quantity: int = 1
 
+
 class OrderCreate(BaseModel):
     address_id: int
     items: List[OrderItemCreate]
 
+
 class OrderRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     status: str
     created_at: datetime
-
-    class Config:
-        orm_mode = True

@@ -11,7 +11,7 @@ class User(Base):
     role = Column(String, default='customer')
     is_verified = Column(Boolean, default=False)
     is_banned = Column(Boolean, default=False)
-    products = relationship('Product', back_populates='added_by')
+    products = relationship('Product', foreign_keys='Product.added_by_user', back_populates='added_by')
 
 class Product(Base):
     __tablename__ = 'products'
