@@ -1,0 +1,498 @@
+! =====================================================================
+! MASTER UNBLOCK / WHITELIST — HOME & HOMELAB INFRASTRUCTURE
+! =====================================================================
+! SUMMARY:
+! This whitelist is intentionally designed to keep critical services
+! functional under aggressive DNS and filter blocklists.
+!
+! INCLUDED SYSTEMS:
+! - Core DNS & Internet stability
+! - Cloudflare tunnels & edge infrastructure
+! - Discord (chat, voice, streaming)
+! - AI platforms (OpenAI, Claude, Gemini, CHAI)
+! - Streaming platforms (playback only)
+! - PC gaming platforms
+! - Smart Home, IoT & security cameras
+! - Makerspace / 3D printing ecosystems
+! - Network infrastructure vendors
+! - Social platforms with fragile media stacks (Instagram)
+! - Code & blocklist hosting (GitHub)
+! - sms
+! - rcs
+! - mms
+!
+!
+! EXCLUDED BY DESIGN:
+! - Advertising networks
+! - Analytics SDKs
+! - Mobile game monetization
+! - Cross-site tracking
+!
+! GOAL:
+! Maximum stability, zero false "No Internet" events, no broken devices.
+! =====================================================================
+
+
+! #####################################################################
+! GROUP 1 — DNS / CONNECTIVITY / TLS / INTERNET STABILITY
+! #####################################################################
+! PURPOSE:
+! Prevent DNS retry storms, OS offline mis-detection, TLS failures,
+! Cloudflare tunnel drops, and short connectivity interruptions.
+! #####################################################################
+
+
+! ---------------------------------------------------------------------
+! CATEGORY: PUBLIC DNS RESOLVERS (CORE + FAILOVER)
+! DESCRIPTION:
+! Devices silently fail over between these. Blocking any can cause
+! brief total internet loss or DNS resolution stalls.
+! ---------------------------------------------------------------------
+
+! Cloudflare DNS (Primary / DoH default)
+@@||cloudflare-dns.com^
+@@||one.one.one.one^
+@@||1dot1dot1dot1.cloudflare-dns.com^
+@@||resolver.cloudflare.com^
+
+! Google DNS (Android / Chrome dependency)
+@@||dns.google^
+@@||dns.google.com^
+@@||8.8.8.8^
+@@||8.8.4.4^
+
+! Quad9 DNS (Security-focused fallback)
+@@||quad9.net^
+@@||dns.quad9.net^
+@@||9.9.9.9^
+
+! OpenDNS / Cisco (Legacy & enterprise devices)
+@@||opendns.com^
+@@||dns.opendns.com^
+@@||208.67.222.222^
+@@||208.67.220.220^
+
+! NextDNS (Mobile apps & fallback resolver)
+@@||nextdns.io^
+@@||dns.nextdns.io^
+
+! CleanBrowsing (IoT & filtered environments)
+@@||cleanbrowsing.org^
+@@||dns.cleanbrowsing.org^
+
+! AdGuard DNS (Client hard dependency)
+@@||adguard-dns.com^
+@@||dns.adguard-dns.com^
+
+
+! ---------------------------------------------------------------------
+! CATEGORY: DNS OVER HTTPS / TLS (DoH / DoT)
+! DESCRIPTION:
+! Blocking these causes DNS retry loops and false offline states.
+! ---------------------------------------------------------------------
+
+@@||dns.google/dns-query^
+@@||cloudflare-dns.com/dns-query^
+@@||dns.quad9.net/dns-query^
+@@||dns.nextdns.io/dns-query^
+
+
+! ---------------------------------------------------------------------
+! CATEGORY: OS CONNECTIVITY & CAPTIVE PORTAL CHECKS
+! DESCRIPTION:
+! OS-level tests used to determine if the internet exists.
+! Blocking causes "No Internet" warnings.
+! ---------------------------------------------------------------------
+
+! Android / Chrome OS
+@@||clients3.google.com^
+@@||connectivitycheck.gstatic.com^
+
+! Windows (NCSI)
+@@||www.msftconnecttest.com^
+@@||msftconnecttest.com^
+@@||dns.msftncsi.com^
+
+! Apple platforms
+@@||captive.apple.com^
+@@||gsp1.apple.com^
+
+
+! ---------------------------------------------------------------------
+! CATEGORY: TIME SYNC / CLOCK SANITY
+! DESCRIPTION:
+! TLS, OAuth tokens, tunnels, and certs fail if clocks drift.
+! ---------------------------------------------------------------------
+
+@@||time.google.com^
+@@||time.cloudflare.com^
+@@||time.windows.com^
+@@||time.apple.com^
+@@||pool.ntp.org^
+
+
+! ---------------------------------------------------------------------
+! CATEGORY: CERTIFICATE / OCSP / TRUST INFRASTRUCTURE
+! DESCRIPTION:
+! Blocking causes random HTTPS handshake failures.
+! ---------------------------------------------------------------------
+
+@@||letsencrypt.org^
+@@||acme-v02.api.letsencrypt.org^
+@@||crt.sh^
+@@||ocsp.pki.goog^
+@@||ocsp.digicert.com^
+@@||ocsp.sectigo.com^
+@@||r3.o.lencr.org^
+
+
+! ---------------------------------------------------------------------
+! CATEGORY: CLOUDFLARE EDGE / TUNNELS / BOT CHALLENGES
+! DESCRIPTION:
+! Required for Cloudflare tunnels, protected sites, and CDN delivery.
+! ---------------------------------------------------------------------
+
+@@||challenges.cloudflare.com^
+@@||static.cloudflareinsights.com^
+@@||cloudflareinsights.com^
+@@||cfargotunnel.com^
+@@||argotunnel.com^
+@@||trycloudflare.com^
+
+
+! ---------------------------------------------------------------------
+! CATEGORY: CDN BACKBONES & QUIC STABILITY
+! DESCRIPTION:
+! Prevents partial page loads and UDP→TCP fallback stalls.
+! ---------------------------------------------------------------------
+
+@@||akamai.net^
+@@||akamaiedge.net^
+@@||fastly.net^
+@@||edgesuite.net^
+@@||quic.cloudflare.com^
+@@||www.google.com^
+
+
+! #####################################################################
+! GROUP 2 — DISCORD (CHAT / VOICE / STREAMING)
+! #####################################################################
+! PURPOSE:
+! Keep Discord messaging, voice, screenshare, embeds, and media stable.
+! #####################################################################
+
+! Core & API
+@@||discord.com^
+@@||discord.gg^
+@@||discordapp.com^
+@@||api.discord.com^
+
+! Media & CDN
+@@||discordcdn.com^
+@@||cdn.discordapp.com^
+@@||media.discordapp.net^
+@@||images-ext-*.discordapp.net^
+@@||discordusercontent.com^
+@@||discordattachments.com^
+
+! Voice / Realtime
+@@||gateway.discord.gg^
+@@||gateway.discordapp.com^
+@@||voice.discord.gg^
+@@||rtc.discord.gg^
+
+! Status & WebSockets
+@@||status.discord.com^
+@@||discord.com^$websocket
+@@||gateway.discord.gg^$websocket
+
+
+! #####################################################################
+! GROUP 3 — AI / CHAT PLATFORMS
+! #####################################################################
+! PURPOSE:
+! Allow WebSockets, APIs, and streaming responses for AI services.
+! #####################################################################
+
+! OpenAI / ChatGPT
+@@||openai.com^
+@@||chat.openai.com^
+@@||api.openai.com^
+@@||auth.openai.com^
+@@||oaistatic.com^
+@@||oaiusercontent.com^
+@@||openai.com^$websocket
+@@||chat.openai.com^$websocket
+
+! Anthropic / Claude
+@@||anthropic.com^
+@@||claude.ai^
+@@||api.anthropic.com^
+@@||claude.ai^$websocket
+
+! CHAI
+@@||chai.ai^
+@@||c.ai^
+@@||chai-research.com^
+@@||chai.ai^$websocket
+
+! Google Gemini
+@@||ai.google.com^
+@@||generativeai.googleapis.com^
+
+
+! #####################################################################
+! GROUP 4 — STREAMING PLATFORMS (PLAYBACK ONLY)
+! #####################################################################
+! PURPOSE:
+! Allow video playback and auth without enabling ad telemetry.
+! #####################################################################
+
+! YouTube
+@@||youtube.com^
+@@||googlevideo.com^
+@@||ytimg.com^
+
+! Netflix
+@@||netflix.com^
+@@||nflxvideo.net^
+@@||nflximg.net^
+@@||nflxso.net^
+
+! Hulu
+@@||hulu.com^
+@@||huluim.com^
+
+! Prime Video
+@@||primevideo.com^
+@@||media-amazon.com^
+
+! Disney+
+@@||disneyplus.com^
+@@||dssott.com^
+
+! Plex / Jellyfin / Emby
+@@||plex.tv^
+@@||app.plex.tv^
+@@||jellyfin.org^
+@@||emby.media^
+
+
+! #####################################################################
+! GROUP 5 — SMART HOME / IOT / SECURITY CAMERAS
+! #####################################################################
+! PURPOSE:
+! Prevent devices from showing offline, losing clips, or failing alerts.
+! #####################################################################
+
+! Google Home / Nest
+@@||googlehome.com^
+@@||nest.com^
+@@||homegraph.googleapis.com^
+
+! Amazon Alexa / Ring
+@@||amazonalexa.com^
+@@||alexa.amazon.com^
+@@||ring.com^
+@@||api.ring.com^
+
+! Apple HomeKit
+@@||icloud.com^
+@@||homekit.apple.com^
+
+! TP-Link Kasa / Tapo (incl. cameras)
+@@||tp-link.com^
+@@||tplinkcloud.com^
+@@||tplinkra.com^
+@@||tapo.com^
+@@||tapocare.com^
+
+! Wyze Cameras
+@@||wyze.com^
+@@||api.wyze.com^
+@@||services.wyze.com^
+@@||wyzecam.com^
+
+! UniFi Protect
+@@||ui.com^
+@@||unifi.ui.com^
+@@||protect.ui.com^
+
+! Other camera ecosystems
+@@||arlo.com^
+@@||reolink.com^
+@@||eufylife.com^
+@@||anker.com^
+@@||tuya.com^
+@@||iot.tuya.com^
+@@||smartlifeapp.com^
+
+
+! #####################################################################
+! GROUP 6 — PC GAMING PLATFORMS
+! #####################################################################
+! PURPOSE:
+! Allow installs, updates, auth, multiplayer connectivity.
+! #####################################################################
+
+@@||steampowered.com^
+@@||steamcommunity.com^
+@@||steamcontent.com^
+@@||steamstatic.com^
+@@||steamcdn.com^
+
+@@||epicgames.com^
+@@||epicgamescdn.com^
+
+@@||ea.com^
+@@||origin.com^
+
+@@||ubisoft.com^
+@@||uplay.com^
+
+@@||xboxlive.com^
+@@||xboxservices.com^
+
+
+! #####################################################################
+! GROUP 7 — MAKERSPACE / 3D PRINTING
+! #####################################################################
+! PURPOSE:
+! Allow slicers, firmware updates, cloud print control.
+! #####################################################################
+
+@@||bambulab.com^
+@@||api.bambulab.com^
+@@||cloud.bambulab.com^
+@@||iot.bambulab.com^
+@@||mqtt.bambulab.com^
+
+@@||anycubic.com^
+@@||elegoo.com^
+@@||phrozen3d.com^
+@@||formlabs.com^
+
+
+! #####################################################################
+! GROUP 8 — SOCIAL PLATFORM FULL UNBLOCK (INSTAGRAM)
+! #####################################################################
+! PURPOSE:
+! Prevent media, DMs, reels, stories, and GIFs from breaking.
+! #####################################################################
+
+@@||instagram.com^
+@@||api.instagram.com^
+@@||i.instagram.com^
+@@||cdninstagram.com^
+@@||scontent.cdninstagram.com^
+@@||instagram.fna.fbcdn.net^
+@@||fbcdn.net^
+
+@@||giphy.com^
+@@||media.giphy.com^
+
+@@||instagram.com^$websocket
+@@||facebook.com^
+@@||connect.facebook.net^
+@@||graph.facebook.com^
+
+
+! #####################################################################
+! GROUP 9 — CODE / BLOCKLIST HOSTING
+! #####################################################################
+! PURPOSE:
+! Ensure filter lists, scripts, and updates always load.
+! #####################################################################
+
+@@||github.com^
+@@||raw.githubusercontent.com^
+@@||api.github.com^
+@@||objects.githubusercontent.com^
+@@||releases.githubusercontent.com^
+@@||githubusercontent.com^
+@@||github.io^
+
+
+! #####################################################################
+! GROUP 10 — MESSAGING (RCS / iOS RCS / SMS / MMS)
+! #####################################################################
+! PURPOSE: Ensures reliable messaging across Android and iOS by allowing
+!          required services for RCS (Google Jibe), Apple Messages,
+!          SMS fallback, MMS delivery, presence, and push notifications.
+
+##################################################
+## MESSAGING (RCS / iOS RCS / SMS / MMS SUPPORT) ##
+##################################################
+
+
+# --- Google RCS presence & real-time messaging ---
+mtalk.google.com
+mtalk4.google.com
+alt1-mtalk.google.com
+alt2-mtalk.google.com
+alt3-mtalk.google.com
+alt4-mtalk.google.com
+
+
+# --- Google RCS core services ---
+rcs.google.com
+rcs-acs-prod.google.com
+rcs-acs-prod-us.sandbox.google.com
+
+
+# --- Google Jibe RCS backend ---
+jibe.google.com
+jibe-rcs.google.com
+jibe-rcs-edge.googleapis.com
+jibe-rcs-ingestion.googleapis.com
+
+
+# --- Google push / background delivery ---
+firebaseinstallations.googleapis.com
+firebase.googleapis.com
+fcm.googleapis.com
+
+
+# --- Google connectivity checks ---
+connectivitycheck.gstatic.com
+clients3.google.com
+
+
+# ==================================================
+# APPLE MESSAGES (iOS RCS / SMS / MMS / iMessage)
+# ==================================================
+
+# --- Apple push & messaging transport ---
+push.apple.com
+init.push.apple.com
+feedback.push.apple.com
+
+# --- Apple identity / messaging auth ---
+gateway.icloud.com
+identity.apple.com
+setup.icloud.com
+
+# --- Apple messaging service discovery ---
+gsp-ssl.ls.apple.com
+gsp64-ssl.ls.apple.com
+
+# --- Apple carrier / message update services ---
+mesu.apple.com
+
+
+# ==================================================
+# SMS / MMS CARRIER SUPPORT (GENERIC / SAFE)
+# ==================================================
+
+# --- MMS helpers used by many carriers ---
+mms.apple.com
+mmsc.mobile.att.net
+mms.vtext.com
+mms.mycricket.com
+mms.t-mobile.com
+mms.uscc.net
+
+
+! =====================================================================
+! END MASTER UNBLOCK / WHITELIST
+! =====================================================================
