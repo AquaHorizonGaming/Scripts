@@ -51,6 +51,16 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<void> _signup() async {
+    setState(() => _loading = true);
+    final api = ApiClient();
+    final user = await api.signup(_emailController.text, _passwordController.text);
+    setState(() => _loading = false);
+    if (user != null) {
+      _login();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,6 +74,7 @@ class _LoginPageState extends State<LoginPage> {
             TextField(controller: _passwordController, decoration: InputDecoration(labelText: 'Password'), obscureText: true),
             const SizedBox(height: 16),
             ElevatedButton(onPressed: _loading ? null : _login, child: _loading ? CircularProgressIndicator() : Text('Login')),
+            TextButton(onPressed: _loading ? null : _signup, child: const Text('Create account')),
           ],
         ),
       ),

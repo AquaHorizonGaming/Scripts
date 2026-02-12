@@ -1,0 +1,73 @@
+! =====================================================================
+! FULL UNBLOCK — INSTAGRAM
+! ---------------------------------------------------------------------
+! Purpose:
+! - Prevent aggressive blocklists from breaking Instagram
+! - Allow media, DMs, stories, reels, GIFs, and real-time features
+!
+! Scope:
+! - Instagram domains
+! - Instagram media CDNs
+! - Required Meta infrastructure ONLY
+!
+! This does NOT broadly unblock Facebook ads elsewhere.
+! =====================================================================
+
+
+! =====================================================================
+! INSTAGRAM CORE
+! =====================================================================
+
+@@||instagram.com^
+@@||www.instagram.com^
+@@||api.instagram.com^
+@@||i.instagram.com^
+@@||graph.instagram.com^
+
+
+! =====================================================================
+! INSTAGRAM MEDIA & CDN (IMAGES, VIDEO, GIFs)
+! =====================================================================
+
+@@||cdninstagram.com^
+@@||scontent.cdninstagram.com^
+@@||instagram.fna.fbcdn.net^
+@@||fbcdn.net^
+
+! NOTE:
+! fbcdn.net is REQUIRED for Instagram media delivery
+! Blocking it breaks images, stories, and reels
+
+
+! =====================================================================
+! GIFs (USED IN DMs & COMMENTS)
+! =====================================================================
+
+@@||giphy.com^
+@@||media.giphy.com^
+@@||i.giphy.com^
+
+
+! =====================================================================
+! REAL-TIME / DMs / STORIES
+! =====================================================================
+
+@@||instagram.com^$websocket
+@@||i.instagram.com^$websocket
+
+
+! =====================================================================
+! META BACKEND REQUIRED FOR INSTAGRAM
+! ---------------------------------------------------------------------
+! These are NOT ad delivery endpoints.
+! Blocking them breaks login, media loading, and sessions.
+! =====================================================================
+
+@@||facebook.com^
+@@||connect.facebook.net^
+@@||graph.facebook.com^
+
+
+! =====================================================================
+! END FULL INSTAGRAM UNBLOCK
+! =====================================================================

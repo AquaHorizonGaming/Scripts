@@ -1,6 +1,8 @@
 # Flutter Grocery App
 
-This is a skeleton Flutter application supporting three roles: **customer**, **shopper**, and **admin**. The project is structured using the MVVM pattern and targets Android, iOS, and Web (PWA).
+This Flutter application supports three roles: **customer**, **shopper**, and **admin**. It follows the MVVM pattern and runs on Android, iOS, and Web (as a PWA). All API calls use the FastAPI backend at `https://api.lostmediastudios.com`.
+
+Role-based routing uses the JWT returned from the backend after login. Depending on the user role the app loads a different dashboard.
 
 ## Directory Layout
 
@@ -15,11 +17,12 @@ lib/
 
 ## Features
 
-- Email/password authentication (placeholder)
-- Role-based dashboards for customer, shopper, and admin
-- Placeholder API client using `dio`
+- Email/password authentication via FastAPI
+- Role-based dashboards for **customer**, **shopper**, and **admin**
+- Cross-platform build: Android, iOS, and Web (PWA)
+- API client powered by `dio`
 - Secure token storage with `flutter_secure_storage`
-- Responsive Flutter UI for mobile and web
+- Responsive UI across phone, tablet, and desktop
 
 The code leaves TODO comments where real backend calls, maps, and notifications would be implemented.
 
