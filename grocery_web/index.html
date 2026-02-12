@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FreshCart | Grocery Delivery</title>
+    <meta
+      name="description"
+      content="FreshCart delivers groceries in under 30 minutes with fresh produce, pantry essentials, and easy checkout."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav">
+        <a href="#" class="brand">FreshCart</a>
+        <nav>
+          <a href="#products">Products</a>
+          <a href="#why-us">Why us</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+        <button class="btn-secondary" id="openCart">Cart <span id="cartCount">0</span></button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero container">
+        <div>
+          <p class="eyebrow">Fast • Fresh • Reliable</p>
+          <h1>Groceries delivered in as little as <span>30 minutes</span>.</h1>
+          <p class="muted">
+            Shop produce, dairy, household essentials, and weekly deals from your local stores.
+            Built for speed and convenience.
+          </p>
+          <div class="hero-actions">
+            <a href="#products" class="btn-primary">Shop now</a>
+            <a href="#why-us" class="btn-ghost">How it works</a>
+          </div>
+        </div>
+        <div class="hero-card">
+          <h3>Today’s Highlights</h3>
+          <ul>
+            <li>🍓 Organic strawberries — $4.49</li>
+            <li>🥬 Baby spinach — $2.99</li>
+            <li>🥖 Artisan bread — $3.50</li>
+            <li>🥛 Oat milk — $3.99</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="stats container" id="why-us">
+        <article><h3>10k+</h3><p>Weekly deliveries</p></article>
+        <article><h3>98%</h3><p>On-time rate</p></article>
+        <article><h3>4.9/5</h3><p>Customer rating</p></article>
+      </section>
+
+      <section class="container products-section" id="products">
+        <div class="section-head">
+          <h2>Popular groceries</h2>
+          <div class="filters">
+            <button data-filter="all" class="active">All</button>
+            <button data-filter="produce">Produce</button>
+            <button data-filter="bakery">Bakery</button>
+            <button data-filter="dairy">Dairy</button>
+          </div>
+        </div>
+        <div id="productGrid" class="product-grid"></div>
+      </section>
+
+      <section class="container faq" id="faq">
+        <h2>Frequently asked questions</h2>
+        <details>
+          <summary>How fast is delivery?</summary>
+          <p>Average delivery time is 30–45 minutes depending on your location and store traffic.</p>
+        </details>
+        <details>
+          <summary>Can I schedule an order?</summary>
+          <p>Yes. Choose an available delivery window during checkout.</p>
+        </details>
+        <details>
+          <summary>Do you offer contactless delivery?</summary>
+          <p>Yes, select “Leave at door” in delivery notes before placing your order.</p>
+        </details>
+      </section>
+    </main>
+
+    <aside id="cartDrawer" class="cart-drawer" aria-hidden="true">
+      <div class="cart-header">
+        <h3>Your cart</h3>
+        <button id="closeCart" aria-label="Close cart">✕</button>
+      </div>
+      <div id="cartItems" class="cart-items"></div>
+      <div class="cart-footer">
+        <p>Total: <strong id="cartTotal">$0.00</strong></p>
+        <button class="btn-primary checkout">Checkout</button>
+      </div>
+    </aside>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
