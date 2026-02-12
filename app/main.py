@@ -3,41 +3,16 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from sqlalchemy.orm import Session
 
-from . import admin, auth, models, orders, products
-from .cart import router as cart_router
-from .checkout import router as checkout_router
-from .database import Base, SessionLocal, engine
+from . import admin, auth, orders, products
+from .database import Base, engine
 
 app = FastAPI(title='Grocery Delivery API')
 
 Base.metadata.create_all(bind=engine)
 
-
-def seed_products():
-    db: Session = SessionLocal()
-    try:
-        if db.query(models.Product).count() == 0:
-            db.add_all(
-                [
-                    models.Product(name='Bananas', price_customer=1.99, image_url='', store_id=1),
-                    models.Product(name='Avocados', price_customer=3.49, image_url='', store_id=1),
-                    models.Product(name='Sourdough Bread', price_customer=4.20, image_url='', store_id=1),
-                    models.Product(name='Croissants', price_customer=5.50, image_url='', store_id=1),
-                    models.Product(name='Whole Milk', price_customer=3.15, image_url='', store_id=1),
-                    models.Product(name='Greek Yogurt', price_customer=4.45, image_url='', store_id=1),
-                ]
-            )
-            db.commit()
-    finally:
-        db.close()
-
-
-seed_products()
-
 repo_root = Path(__file__).resolve().parents[1]
-web_root = repo_root / 'grocery_web'
+web_root = repo_root / "grocery_web"
 
 if web_root.exists():
     app.mount('/static', StaticFiles(directory=web_root), name='store-static')

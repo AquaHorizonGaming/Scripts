@@ -15,7 +15,7 @@ body {
   color: var(--ink);
   background: linear-gradient(180deg, #f5faf7, #fefefe);
 }
-.hidden { display: none; }
+
 .container { width: min(1120px, 92vw); margin: 0 auto; }
 .site-header {
   position: sticky;
@@ -125,20 +125,11 @@ nav a { text-decoration: none; color: var(--ink); font-weight: 500; }
   margin-top: 0.7rem;
 }
 
-.confirmation {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 1rem;
-}
-.order-items { display: grid; gap: .5rem; }
-.order-item-row { display:flex; justify-content:space-between; border:1px solid var(--line); border-radius:8px; padding:.6rem; }
-
 .cart-drawer {
   position: fixed;
   right: 0;
   top: 0;
-  width: min(420px, 92vw);
+  width: min(380px, 92vw);
   height: 100vh;
   background: #fff;
   border-left: 1px solid var(--line);
@@ -162,24 +153,8 @@ nav a { text-decoration: none; color: var(--ink); font-weight: 500; }
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 0.6rem;
-  display: grid;
-  gap: .5rem;
-}
-.cart-row-top { display:flex; justify-content:space-between; }
-.qty-controls { display:flex; align-items:center; gap:.4rem; }
-.qty-controls button { border:1px solid var(--line); background:#fff; border-radius:8px; width:28px; height:28px; cursor:pointer; }
-.remove-link { border:0; background:none; color:#b42318; cursor:pointer; padding:0; font-size:.85rem; }
-
-.toast {
-  position: fixed;
-  left: 50%;
-  bottom: 1rem;
-  transform: translateX(-50%);
-  background: #122117;
-  color: #fff;
-  padding: .7rem 1rem;
-  border-radius: 999px;
-  z-index: 50;
+  display: flex;
+  justify-content: space-between;
 }
 
 @media (max-width: 860px) {

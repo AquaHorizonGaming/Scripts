@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional, List
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 
 
 class UserCreate(BaseModel):
@@ -74,43 +74,3 @@ class OrderRead(BaseModel):
     id: int
     status: str
     created_at: datetime
-
-
-class CartItem(BaseModel):
-    product_id: int
-    name: str
-    unit_price: float
-    quantity: int = Field(ge=1)
-
-
-class CartAddRequest(BaseModel):
-    product_id: int
-    name: str
-    unit_price: float
-    quantity: int = Field(default=1, ge=1)
-
-
-class CartUpdateRequest(BaseModel):
-    product_id: int
-    quantity: int
-
-
-class CartRemoveRequest(BaseModel):
-    product_id: int
-
-
-class CartResponse(BaseModel):
-    items: List[CartItem]
-    total: float
-
-
-class CheckoutRequest(BaseModel):
-    items: List[CartItem] = Field(default_factory=list)
-
-
-class CheckoutResponse(BaseModel):
-    status: str
-    order_id: str
-    message: str
-    total: float
-    items: List[CartItem]
