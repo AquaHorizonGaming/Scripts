@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Header
 from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 
@@ -17,7 +17,14 @@ def get_db():
         db.close()
 
 
-def get_current_user(db: Session = Depends(get_db), token: str = None):
+def get_current_user(
+    db: Session = Depends(get_db), authorization: str | None = Header(None)
+):
+    token = None
+    if authorization:
+        parts = authorization.split()
+        if len(parts) == 2:
+            token = parts[1]
     if not token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     try:
@@ -30,4 +37,10 @@ def get_current_user(db: Session = Depends(get_db), token: str = None):
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+
+def get_current_admin(user: models.User = Depends(get_current_user)):
+    if user.role != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized")
     return user
