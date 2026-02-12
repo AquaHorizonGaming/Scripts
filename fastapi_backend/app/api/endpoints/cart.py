@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
-from ..deps import get_db, get_current_user
+from ..deps import get_current_user, get_db
 from ... import models, schemas
 
 router = APIRouter(prefix="/cart", tags=["cart"])
@@ -14,12 +14,17 @@ def get_cart(db: Session = Depends(get_db), user=Depends(get_current_user)):
 
 @router.post("/add", response_model=schemas.CartItem)
 def add_cart(item: schemas.CartItemIn, db: Session = Depends(get_db), user=Depends(get_current_user)):
+    product = db.query(models.Product).filter(models.Product.id == item.product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
     cart_item = db.query(models.CartItem).filter_by(user_id=user.id, product_id=item.product_id).first()
     if cart_item:
         cart_item.quantity += item.quantity
     else:
         cart_item = models.CartItem(user_id=user.id, product_id=item.product_id, quantity=item.quantity)
         db.add(cart_item)
+
     db.commit()
     db.refresh(cart_item)
     return cart_item

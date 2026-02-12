@@ -1,30 +1,31 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from ..deps import get_db, get_current_user
+from ..deps import get_current_admin, get_db
 from ... import models, schemas
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
 
-def current_admin(user: models.User = Depends(get_current_user)):
-    if user.role != "admin":
-        raise HTTPException(status_code=403, detail="Not authorized")
-    return user
-
-
 @router.get("/users", response_model=list[schemas.User])
-def list_users(db: Session = Depends(get_db), admin: models.User = Depends(current_admin)):
+def list_users(db: Session = Depends(get_db), admin: models.User = Depends(get_current_admin)):
     return db.query(models.User).all()
 
 
 @router.put("/users/{user_id}", response_model=schemas.User)
-def update_user_role(user_id: int, payload: schemas.UserUpdate, db: Session = Depends(get_db), admin: models.User = Depends(current_admin)):
+def update_user_role(
+    user_id: int,
+    payload: schemas.AdminUserUpdate,
+    db: Session = Depends(get_db),
+    admin: models.User = Depends(get_current_admin),
+):
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     data = payload.dict(exclude_unset=True)
     for field, value in data.items():
+        if isinstance(value, schemas.UserRole):
+            value = value.value
         setattr(user, field, value)
     db.add(user)
     db.commit()
@@ -33,7 +34,7 @@ def update_user_role(user_id: int, payload: schemas.UserUpdate, db: Session = De
 
 
 @router.delete("/users/{user_id}")
-def deactivate_user(user_id: int, db: Session = Depends(get_db), admin: models.User = Depends(current_admin)):
+def deactivate_user(user_id: int, db: Session = Depends(get_db), admin: models.User = Depends(get_current_admin)):
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -43,8 +44,12 @@ def deactivate_user(user_id: int, db: Session = Depends(get_db), admin: models.U
     return {"detail": "deactivated"}
 
 
-@router.post("/products", response_model=schemas.Product)
-def add_product(product: schemas.ProductBase, db: Session = Depends(get_db), admin: models.User = Depends(current_admin)):
+@router.post("/products", response_model=schemas.Product, status_code=status.HTTP_201_CREATED)
+def add_product(product: schemas.ProductBase, db: Session = Depends(get_db), admin: models.User = Depends(get_current_admin)):
+    category = db.query(models.Category).filter(models.Category.id == product.category_id).first()
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+
     p = models.Product(**product.dict())
     db.add(p)
     db.commit()
@@ -53,10 +58,15 @@ def add_product(product: schemas.ProductBase, db: Session = Depends(get_db), adm
 
 
 @router.put("/products/{product_id}", response_model=schemas.Product)
-def update_product(product_id: int, product: schemas.ProductBase, db: Session = Depends(get_db), admin: models.User = Depends(current_admin)):
+def update_product(product_id: int, product: schemas.ProductBase, db: Session = Depends(get_db), admin: models.User = Depends(get_current_admin)):
     p = db.query(models.Product).filter(models.Product.id == product_id).first()
     if not p:
         raise HTTPException(status_code=404, detail="Product not found")
+
+    category = db.query(models.Category).filter(models.Category.id == product.category_id).first()
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+
     for field, value in product.dict().items():
         setattr(p, field, value)
     db.add(p)
@@ -66,7 +76,7 @@ def update_product(product_id: int, product: schemas.ProductBase, db: Session = 
 
 
 @router.delete("/products/{product_id}")
-def delete_product(product_id: int, db: Session = Depends(get_db), admin: models.User = Depends(current_admin)):
+def delete_product(product_id: int, db: Session = Depends(get_db), admin: models.User = Depends(get_current_admin)):
     p = db.query(models.Product).filter(models.Product.id == product_id).first()
     if p:
         db.delete(p)

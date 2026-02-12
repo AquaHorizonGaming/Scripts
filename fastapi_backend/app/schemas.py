@@ -1,23 +1,32 @@
 from datetime import datetime
+from enum import Enum
 from typing import List, Optional
-from pydantic import BaseModel, EmailStr
+
+from pydantic import BaseModel, ConfigDict, Field
+
+
+class UserRole(str, Enum):
+    customer = "customer"
+    admin = "admin"
+
 
 class UserBase(BaseModel):
-    email: EmailStr
+    email: str
     name: Optional[str] = None
     address: Optional[str] = None
     phone: Optional[str] = None
 
+
 class UserCreate(UserBase):
-    password: str
-    role: str = 'customer'
+    password: str = Field(min_length=8)
+    role: UserRole = UserRole.customer
+
 
 class User(UserBase):
-    id: int
-    role: str
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        orm_mode = True
+    id: int
+    role: UserRole
 
 
 class UserUpdate(BaseModel):
@@ -25,29 +34,39 @@ class UserUpdate(BaseModel):
     address: Optional[str] = None
     phone: Optional[str] = None
 
+
+class AdminUserUpdate(UserUpdate):
+    role: Optional[UserRole] = None
+    is_active: Optional[int] = Field(default=None, ge=0, le=1)
+
+
 class ProductBase(BaseModel):
     name: str
     image_url: Optional[str] = None
-    customer_price: float
-    shopper_price: float
+    customer_price: float = Field(gt=0)
+    shopper_price: float = Field(gt=0)
+    category_id: int
+
 
 class Product(ProductBase):
-    id: int
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        orm_mode = True
+    id: int
 
 
 class Category(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     name: str
 
-    class Config:
-        orm_mode = True
 
 class OrderItem(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     product_id: int
-    quantity: int
+    quantity: int = Field(gt=0)
+
 
 class OrderBase(BaseModel):
     scheduled_for: datetime
@@ -55,28 +74,35 @@ class OrderBase(BaseModel):
     phone: str
     notes: Optional[str] = None
 
-class OrderCreate(OrderBase):
-    items: List[OrderItem]
 
 class Order(OrderBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     customer_id: int
     status: str
     items: List[OrderItem]
 
-    class Config:
-        orm_mode = True
-
 
 class CartItem(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     product: Product
     quantity: int
 
-    class Config:
-        orm_mode = True
-
 
 class CartItemIn(BaseModel):
     product_id: int
-    quantity: int
+    quantity: int = Field(gt=0)
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: User
