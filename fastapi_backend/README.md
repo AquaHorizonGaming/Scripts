@@ -1,36 +1,60 @@
 # FastAPI Backend
 
-This backend exposes a basic REST API for the grocery delivery app. It uses
-FastAPI with SQLAlchemy models and JWT-based authentication.
+Production-leaning REST API for the grocery delivery app using FastAPI + SQLAlchemy + JWT.
 
-## Endpoints
-- `POST /auth/signup` – create a new account
-- `POST /auth/login` – obtain a JWT token
-- `GET /products/` – list available products (filter by `category_id`)
-- `GET /products/categories/` – list product categories
+## Improvements included
+- Environment-driven configuration (`DATABASE_URL`, `SECRET_KEY`, CORS, token lifetime).
+- Health endpoint (`GET /health`) for liveness checks.
+- JWT bearer parsing hardening and inactive-user blocking.
+- Safer auth flow with duplicate email prevention and typed login response.
+- Input validation with stricter schema fields (password length, positive prices/quantities).
+- Basic product pagination (`skip` + `limit`).
+- Better admin controls (role update + active flag support).
+
+## Environment variables
+- `APP_NAME` (default: `Grocery Delivery API`)
+- `ENVIRONMENT` (default: `development`)
+- `DATABASE_URL` (default: `sqlite:///./test.db`)
+- `SECRET_KEY` (required in production)
+- `JWT_ALGORITHM` (default: `HS256`)
+- `ACCESS_TOKEN_EXPIRE_MINUTES` (default: `30`)
+- `CORS_ORIGINS` (comma-separated)
+
+## Quick start
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+## Endpoint highlights
+- `GET /health` – health check
+- `POST /auth/signup` – create account
+- `POST /auth/login` – obtain JWT token
+- `GET /products/` – list products (`category_id`, `skip`, `limit`)
+- `GET /products/categories/` – list categories
 - `GET /user/me` – current user profile
 - `PUT /user/me` – update profile fields
 - `GET /cart/` – view cart
 - `POST /cart/add` – add product to cart
 - `PUT /cart/update` – update quantity
 - `DELETE /cart/remove` – remove product from cart
-- `POST /orders/` – create an order from cart
-- `GET /orders/` – list orders (admin sees all)
+- `POST /orders/` – create order from cart
+- `GET /orders/` – list orders (admins see all)
 - `GET /admin/users` – list all users (admin)
-- `PUT /admin/users/{id}` – update user role/info (admin)
+- `PUT /admin/users/{id}` – update user role/status/info (admin)
 - `DELETE /admin/users/{id}` – deactivate user (admin)
-- `POST /admin/products` – add product
-- `PUT /admin/products/{id}` – edit product
-- `DELETE /admin/products/{id}` – delete product
+- `POST /admin/products` – add product (admin)
+- `PUT /admin/products/{id}` – edit product (admin)
+- `DELETE /admin/products/{id}` – delete product (admin)
 
-The database is configured via `sqlite:///./test.db` for demo purposes. In
-production, swap the connection string with your PostgreSQL database.
-
-The API is meant to run behind Docker and exposes port **8000** by default with
-CORS enabled for localhost testing.
-
-Run the server:
-
+## Run on port 9485 (storefront + API)
 ```bash
-uvicorn app.main:app --reload
+uvicorn app.main:app --host 127.0.0.1 --port 9485
 ```
+
+- Website: `http://127.0.0.1:9485/`
+- API docs: `http://127.0.0.1:9485/docs`
+
+The FastAPI app now serves the `grocery_web/` storefront (`/`, `/app.js`, `/styles.css`) directly so one process is enough for local development.
