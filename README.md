@@ -1,15 +1,5 @@
-# Grocery Delivery Backend
+# Scripts Repository
 
-This project provides a basic FastAPI backend for a grocery delivery service.
+This repository contains example scripts and sample apps. The `GroceryDeliveryApp` directory includes a SwiftUI-based iOS application skeleton for a grocery delivery service.
 
-## Features
-- JWT authentication with customer, shopper and admin roles
-- Product management with manual entry for shoppers
-- Order creation and job assignment
-- Admin endpoints for managing products, jobs and users
-- Dockerized with Postgres, Redis and NGINX
-
-Run the stack with:
-```bash
-docker-compose up --build
-```
+Refer to `GroceryDeliveryApp/README.md` for details.
