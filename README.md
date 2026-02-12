@@ -1,9 +1,5 @@
 # Scripts Repository
 
-This repository contains example scripts and sample apps.
+This repository contains example scripts and sample apps. The `GroceryDeliveryApp` directory includes a SwiftUI-based iOS application skeleton for a grocery delivery service.
 
-- `GroceryDeliveryApp` – SwiftUI-based iOS app skeleton.
-- `FlutterGroceryApp` – Cross-platform (Android/iOS/Web) Flutter app supporting customer, shopper, and admin roles.
-- `fastapi_backend` – FastAPI project providing REST endpoints for the Flutter app.
-
-Refer to each project's README for details.
+Refer to `GroceryDeliveryApp/README.md` for details.
