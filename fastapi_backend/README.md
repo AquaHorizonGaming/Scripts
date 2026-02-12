@@ -48,3 +48,13 @@ uvicorn app.main:app --reload
 - `POST /admin/products` – add product (admin)
 - `PUT /admin/products/{id}` – edit product (admin)
 - `DELETE /admin/products/{id}` – delete product (admin)
+
+## Run on port 9485 (storefront + API)
+```bash
+uvicorn app.main:app --host 127.0.0.1 --port 9485
+```
+
+- Website: `http://127.0.0.1:9485/`
+- API docs: `http://127.0.0.1:9485/docs`
+
+The FastAPI app now serves the `grocery_web/` storefront (`/`, `/app.js`, `/styles.css`) directly so one process is enough for local development.
