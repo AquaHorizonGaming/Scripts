@@ -1,0 +1,13 @@
+{
+  "AppName": "IntuneDeployTool",
+  "OutputDir": "output",
+  "LogDir": "logs",
+  "DefaultGroupTag": "",
+  "DefaultAuthMode": "Auto",
+  "TenantId": "",
+  "ClientId": "",
+  "CertThumbprint": "",
+  "SyncAfterUpload": true,
+  "CompanyPortalFallback": "ms-windows-store://pdp/?productid=9WZDNCRFJ3PZ",
+  "WorkSchoolUri": "ms-settings:workplace"
+}
