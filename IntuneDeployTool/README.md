@@ -18,7 +18,8 @@ IntuneDeployTool is a production-focused, PowerShell-first WinForms desktop tool
 ## Prerequisites
 - Windows 11 technician station or target device.
 - Run as Administrator (tool self-elevates).
-- PowerShell 5.1+.
+- **Windows PowerShell 5.1 is the baseline target**.
+- PowerShell 7+ is supported where cmdlets/API behavior match, but bench validation should be done on Windows PowerShell 5.1.
 - Network connectivity to:
   - `https://graph.microsoft.com`
   - `https://login.microsoftonline.com`
@@ -30,6 +31,21 @@ IntuneDeployTool is a production-focused, PowerShell-first WinForms desktop tool
 cd .\IntuneDeployTool
 powershell -ExecutionPolicy Bypass -File .\Launch-IntuneDeployTool.ps1
 ```
+
+## Execution policy guidance (important)
+If script execution is blocked:
+
+- **Process-scope bypass for a single launch**:
+  ```powershell
+  powershell -ExecutionPolicy Bypass -File .\Launch-IntuneDeployTool.ps1
+  ```
+- **Current user policy option**:
+  ```powershell
+  Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+  ```
+- Group Policy can override local policy settings. If so, follow your enterprise policy process.
+
+The tool does **not** make permanent execution policy changes automatically.
 
 ## Graph auth modes
 ### 1) Interactive delegated

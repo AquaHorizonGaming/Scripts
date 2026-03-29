@@ -2,6 +2,16 @@ Set-StrictMode -Version Latest
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
+function Join-UiLines {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string[]]$Lines
+    )
+
+    return ($Lines -join "`r`n")
+}
+
 function New-UiLabel {
     param([string]$Text,[int]$X,[int]$Y,[int]$W=140,[int]$H=20)
     $c = New-Object System.Windows.Forms.Label
@@ -23,7 +33,7 @@ function New-UiTextBox {
     $c.Multiline = $Multiline; $c.ReadOnly = $ReadOnly
     if ($Multiline) {
         $c.ScrollBars = 'Vertical'
-        $c.WordWrap = $false
+        $c.WordWrap = $true
     }
     return $c
 }

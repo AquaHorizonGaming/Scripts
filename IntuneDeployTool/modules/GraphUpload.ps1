@@ -1,5 +1,21 @@
 Set-StrictMode -Version Latest
 
+function Test-AutopilotUploadPayload {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)] [pscustomobject]$Capture
+    )
+
+    $errors = @()
+    if ([string]::IsNullOrWhiteSpace($Capture.SerialNumber)) { $errors += 'SerialNumber is required.' }
+    if ([string]::IsNullOrWhiteSpace($Capture.HardwareHash)) { $errors += 'HardwareHash is required.' }
+
+    return [pscustomobject]@{
+        IsValid = ($errors.Count -eq 0)
+        Errors = $errors
+    }
+}
+
 function New-ToolImportId {
     [CmdletBinding()]
     param()
@@ -63,6 +79,16 @@ function Upload-AutopilotDeviceImport {
         [string]$GroupTag,
         [string]$AssignedUserPrincipalName
     )
+
+    $validation = Test-AutopilotUploadPayload -Capture $Capture
+    if (-not $validation.IsValid) {
+        return [pscustomobject]@{
+            Success = $false
+            ImportId = $null
+            Error = ($validation.Errors -join ' ')
+            NextAction = 'Collect a valid Autopilot capture before uploading.'
+        }
+    }
 
     $importId = New-ToolImportId
 

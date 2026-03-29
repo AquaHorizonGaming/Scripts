@@ -101,8 +101,27 @@ function Convert-InventoryToDisplayText {
         [pscustomobject]$Inventory
     )
 
-    $lines = foreach ($p in $Inventory.PSObject.Properties) {
-        '{0}: {1}' -f $p.Name, $p.Value
+    $ordered = @(
+        'SerialNumber',
+        'Manufacturer',
+        'Model',
+        'BIOSVersion',
+        'Hostname',
+        'WindowsEdition',
+        'WindowsVersion',
+        'BuildNumber',
+        'TPMStatus',
+        'SecureBootStatus',
+        'CurrentUser',
+        'RunningAsAdmin',
+        'NetworkSummary',
+        'TimestampCollected'
+    )
+
+    $lines = foreach ($name in $ordered) {
+        $value = $Inventory.$name
+        '{0}: {1}' -f $name, $value
     }
-    return ($lines -join [Environment]::NewLine)
+
+    return ($lines -join "`r`n")
 }

@@ -68,6 +68,7 @@ $form.Text = "$($settings.AppName) - Windows Autopilot / Intune Bench Tool"
 $form.Size = New-Object System.Drawing.Size(980, 760)
 $form.StartPosition = 'CenterScreen'
 $form.TopMost = $false
+$form.MinimumSize = New-Object System.Drawing.Size(980, 760)
 
 $tabs = New-Object System.Windows.Forms.TabControl
 $tabs.Dock = 'Fill'
@@ -94,6 +95,8 @@ $form.Controls.Add($statusLabel)
 # Device tab
 $txtDevice = New-UiTextBox -X 10 -Y 10 -W 920 -H 600 -Multiline $true -ReadOnly $true
 $btnRefreshDevice = New-UiButton -Text 'Refresh Device Info' -X 10 -Y 620 -W 180
+$txtDevice.Anchor = 'Top,Bottom,Left,Right'
+$btnRefreshDevice.Anchor = 'Bottom,Left'
 $tabDevice.Controls.AddRange(@($txtDevice,$btnRefreshDevice))
 
 # Capture tab
@@ -101,6 +104,10 @@ $btnCapture = New-UiButton -Text 'Capture Autopilot Hash' -X 10 -Y 10 -W 200
 $btnValidateCapture = New-UiButton -Text 'Validate Capture' -X 220 -Y 10 -W 160
 $btnOpenOutput1 = New-UiButton -Text 'Open Output Folder' -X 390 -Y 10 -W 160
 $txtCaptureRaw = New-UiTextBox -X 10 -Y 50 -W 920 -H 560 -Multiline $true -ReadOnly $true
+$btnCapture.Anchor = 'Top,Left'
+$btnValidateCapture.Anchor = 'Top,Left'
+$btnOpenOutput1.Anchor = 'Top,Left'
+$txtCaptureRaw.Anchor = 'Top,Bottom,Left,Right'
 $tabCapture.Controls.AddRange(@($btnCapture,$btnValidateCapture,$btnOpenOutput1,$txtCaptureRaw))
 
 # Graph tab
@@ -128,7 +135,8 @@ $txtUpn = New-UiTextBox -X 130 -Y 165 -W 330
 
 $btnConnect = New-UiButton -Text 'Connect / Authenticate' -X 10 -Y 205 -W 190
 $btnUpload = New-UiButton -Text 'Upload Autopilot Record' -X 210 -Y 205 -W 190
-$btnSync = New-UiButton -Text 'Sync Autopilot' -X 410 -Y 205 -W 130
+$btnCheckStatus = New-UiButton -Text 'Check Import Status' -X 410 -Y 205 -W 150
+$btnSync = New-UiButton -Text 'Sync Autopilot' -X 570 -Y 205 -W 130
 
 $grpPreview = New-UiGroupBox -Text 'Name Preview (Template Awareness)' -X 490 -Y 10 -W 440 -H 190
 $lblPrefix = New-UiLabel -Text 'Prefix:' -X 10 -Y 25 -W 60
@@ -138,13 +146,18 @@ $txtPreview = New-UiTextBox -X 10 -Y 55 -W 410 -H 110 -Multiline $true -ReadOnly
 $grpPreview.Controls.AddRange(@($lblPrefix,$txtPrefix,$btnPreview,$txtPreview))
 
 $txtGraphStatus = New-UiTextBox -X 10 -Y 245 -W 920 -H 365 -Multiline $true -ReadOnly $true
-$tabGraph.Controls.AddRange(@($lblAuth,$cmbAuth,$lblTenant,$txtTenant,$lblClient,$txtClient,$lblThumb,$txtThumb,$lblGroup,$txtGroup,$lblUpn,$txtUpn,$btnConnect,$btnUpload,$btnSync,$grpPreview,$txtGraphStatus))
+$txtGraphStatus.Anchor = 'Top,Bottom,Left,Right'
+$tabGraph.Controls.AddRange(@($lblAuth,$cmbAuth,$lblTenant,$txtTenant,$lblClient,$txtClient,$lblThumb,$txtThumb,$lblGroup,$txtGroup,$lblUpn,$txtUpn,$btnConnect,$btnUpload,$btnCheckStatus,$btnSync,$grpPreview,$txtGraphStatus))
 
 # Export tab
 $txtCsvPreview = New-UiTextBox -X 10 -Y 10 -W 920 -H 140 -Multiline $true -ReadOnly $true
 $txtJsonPreview = New-UiTextBox -X 10 -Y 160 -W 920 -H 320 -Multiline $true -ReadOnly $true
 $btnExport = New-UiButton -Text 'Export CSV/JSON/Log Bundle' -X 10 -Y 490 -W 250
 $txtExportResult = New-UiTextBox -X 10 -Y 530 -W 920 -H 80 -Multiline $true -ReadOnly $true
+$txtCsvPreview.Anchor = 'Top,Left,Right'
+$txtJsonPreview.Anchor = 'Top,Bottom,Left,Right'
+$btnExport.Anchor = 'Bottom,Left'
+$txtExportResult.Anchor = 'Bottom,Left,Right'
 $tabExport.Controls.AddRange(@($txtCsvPreview,$txtJsonPreview,$btnExport,$txtExportResult))
 
 # Actions tab
@@ -163,6 +176,8 @@ $btnCreateAdmin = New-UiButton -Text 'Create Local Admin' -X 510 -Y 83 -W 150 -H
 
 $txtPreflight = New-UiTextBox -X 10 -Y 130 -W 920 -H 200 -Multiline $true -ReadOnly $true
 $txtSummary = New-UiTextBox -X 10 -Y 340 -W 920 -H 270 -Multiline $true -ReadOnly $true
+$txtPreflight.Anchor = 'Top,Left,Right'
+$txtSummary.Anchor = 'Top,Bottom,Left,Right'
 $txtPreflight.Text = Get-ToolPreflightText
 $txtSummary.Text = Get-ToolBenchCompletionText
 $tabActions.Controls.AddRange(@($lblRename,$txtRename,$btnRename,$btnOpenWorkSchool,$btnCompanyPortal,$btnOpenOutput2,$lblLocalAdmin,$txtAdminUser,$txtAdminPass,$btnCreateAdmin,$txtPreflight,$txtSummary))
@@ -171,6 +186,9 @@ $tabActions.Controls.AddRange(@($lblRename,$txtRename,$btnRename,$btnOpenWorkSch
 $txtLogs = New-UiTextBox -X 10 -Y 10 -W 920 -H 560 -Multiline $true -ReadOnly $true
 $btnRefreshLogs = New-UiButton -Text 'Refresh Logs' -X 10 -Y 580 -W 120
 $btnOpenLog = New-UiButton -Text 'Open Log File' -X 140 -Y 580 -W 120
+$txtLogs.Anchor = 'Top,Bottom,Left,Right'
+$btnRefreshLogs.Anchor = 'Bottom,Left'
+$btnOpenLog.Anchor = 'Bottom,Left'
 $tabLogs.Controls.AddRange(@($txtLogs,$btnRefreshLogs,$btnOpenLog))
 Set-GuiLogTextBox -TextBox $txtLogs
 
@@ -240,7 +258,7 @@ $btnCapture.Add_Click({
             "CsvPath: $($capture.CsvPath)"
             'Raw Output:'
             $capture.RawOutput
-        ) -join [Environment]::NewLine
+        ) -join "`r`n"
 
         Set-Status 'Autopilot capture complete.'
         Write-ToolLog -Level Info -Message "Autopilot capture completed. CSV: $($capture.CsvPath)"
@@ -282,7 +300,7 @@ $btnPreview.Add_Click({
         $r.Warning
         ''
         $r.Note
-    ) -join [Environment]::NewLine
+    ) -join "`r`n"
 })
 
 $btnConnect.Add_Click({
@@ -338,7 +356,7 @@ $btnUpload.Add_Click({
                 "Import ID: $($upload.ImportId)"
                 "Error: $($upload.Error)"
                 "Suggested next step: $($upload.NextAction)"
-            ) -join [Environment]::NewLine
+            ) -join "`r`n"
             Set-Status 'Autopilot upload failed.'
             Write-ToolLog -Level Error -Message "Upload failed. $($upload.Error)"
             return
@@ -355,7 +373,7 @@ $btnUpload.Add_Click({
             "Uploaded On: $($upload.UploadedOn)"
             "Import Status: $(if($status.Found){$status.DeviceImportStatus}else{'Pending / Not yet queryable'})"
             "State Details: $(if($status.Found){$status.DeviceErrorName}else{$status.Message})"
-        ) -join [Environment]::NewLine
+        ) -join "`r`n"
         Set-Status 'Autopilot upload succeeded.'
         Write-ToolLog -Level Info -Message "Upload succeeded. ImportId=$($upload.ImportId)"
 
@@ -407,6 +425,47 @@ $btnSync.Add_Click({
     }
 })
 
+$btnCheckStatus.Add_Click({
+    try {
+        $ctx = Get-ToolGraphContext
+        if (-not $ctx.Connected) { throw 'Authenticate to Graph first.' }
+        if (-not $script:Session.Upload -or [string]::IsNullOrWhiteSpace($script:Session.Upload.ImportId)) {
+            throw 'No upload import ID in session. Upload a record first.'
+        }
+
+        $status = Get-AutopilotImportStatus -GraphContext $ctx -ImportId $script:Session.Upload.ImportId
+        $script:Session.ImportStatus = $status
+
+        if ($status.Found) {
+            $txtGraphStatus.Text = @(
+                'Import status retrieved'
+                "Import ID: $($script:Session.Upload.ImportId)"
+                "Serial Number: $($status.SerialNumber)"
+                "Group Tag: $($status.GroupTag)"
+                "Assigned User: $($status.AssignedUser)"
+                "Device Import Status: $($status.DeviceImportStatus)"
+                "Device Error Code: $($status.DeviceErrorCode)"
+                "Device Error Name: $($status.DeviceErrorName)"
+            ) -join "`r`n"
+        }
+        else {
+            $txtGraphStatus.Text = @(
+                'Import status not available yet'
+                "Import ID: $($script:Session.Upload.ImportId)"
+                "Details: $(if($status.Error){$status.Error}else{$status.Message})"
+            ) -join "`r`n"
+        }
+
+        Write-ToolLog -Level Info -Message "Checked import status for $($script:Session.Upload.ImportId)."
+    }
+    catch {
+        $msg = "Import status check failed: $($_.Exception.Message)"
+        Set-Status $msg
+        Write-ToolLog -Level Error -Message $msg
+        Show-UiError -Message $msg
+    }
+})
+
 $btnExport.Add_Click({
     try {
         if (-not $script:Session.Capture) { throw 'Capture data is required before export.' }
@@ -415,7 +474,7 @@ $btnExport.Add_Click({
             "CSV:  $($bundle.CsvPath)"
             "JSON: $($bundle.JsonPath)"
             "LOG:  $($bundle.LogPath)"
-        ) -join [Environment]::NewLine
+        ) -join "`r`n"
         Set-Status 'Export bundle created.'
         Write-ToolLog -Level Info -Message "Export bundle created: $($bundle.CsvPath), $($bundle.JsonPath), $($bundle.LogPath)"
     }
