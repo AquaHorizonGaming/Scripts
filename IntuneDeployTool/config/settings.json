@@ -7,7 +7,13 @@
   "TenantId": "",
   "ClientId": "",
   "CertThumbprint": "",
+  "OnboardingDataPath": "data/sample-onboarding-requests.json",
   "SyncAfterUpload": true,
   "CompanyPortalFallback": "ms-windows-store://pdp/?productid=9WZDNCRFJ3PZ",
-  "WorkSchoolUri": "ms-settings:workplace"
+  "WorkSchoolUri": "ms-settings:workplace",
+  "FutureConnectors": {
+    "SharePointEnabled": false,
+    "AzureIdentityEnabled": false,
+    "IntuneTicketLinkEnabled": false
+  }
 }

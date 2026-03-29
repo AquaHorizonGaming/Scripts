@@ -14,6 +14,7 @@ IntuneDeployTool is a production-focused, PowerShell-first WinForms desktop tool
 - Optionally triggers Autopilot sync.
 - Exports CSV, JSON, and session log bundles locally.
 - Supports bench technician actions (rename, open settings, open Company Portal, bootstrap local admin, preflight and completion checklists).
+- Adds an onboarding admin portal shell tab that reviews local placeholder onboarding requests and staged tasks (manager validation, IT approval, identity creation, stock PC assignment, image/deploy).
 
 ## Prerequisites
 - Windows 11 technician station or target device.
@@ -93,6 +94,25 @@ The tool is designed around:
 - Full OOBE and ESP validation happens only after reset/wipe.
 - The same desktop app session does not continue through OOBE.
 
+## Onboarding request review shell (new)
+- The **Onboarding Requests** tab is designed as a broader IT admin portal foundation.
+- It currently reads local JSON data (`data/sample-onboarding-requests.json` by default) to model request lifecycle state.
+- Workflow modeled in the tab:
+  1. HR enters employee in ADP.
+  2. HR submits New User Setup request.
+  3. Manager validates request.
+  4. IT approves request.
+  5. IT performs identity creation tasks.
+  6. IT assigns stock PC if available.
+  7. If no stock PC, IT executes image/deploy tasks.
+  8. Request remains open until all tasks complete.
+
+## Staged connector plan (SharePoint/Azure)
+- Current build: local JSON/sample records only (no mandatory live Azure credentials).
+- Planned next stage: connector module to pull onboarding tickets from SharePoint lists.
+- Planned future stage: Azure connectors for identity/device task automation.
+- The config includes `FutureConnectors` flags so tenant-specific integrations can be enabled later without redesigning the UI.
+
 ## Known limitations
 - App-only auth requires certificate private key access on the local machine/user store.
 - Interactive auth requires Microsoft Graph PowerShell module availability.
@@ -113,6 +133,8 @@ The tool is designed around:
 - `TenantId`
 - `ClientId`
 - `CertThumbprint`
+- `OnboardingDataPath`
 - `SyncAfterUpload`
 - `CompanyPortalFallback`
 - `WorkSchoolUri`
+- `FutureConnectors` (SharePoint/Azure feature flags for staged rollout)

@@ -16,9 +16,15 @@ function Get-DefaultToolSettings {
         TenantId              = ''
         ClientId              = ''
         CertThumbprint        = ''
+        OnboardingDataPath    = Join-Path -Path $BasePath -ChildPath 'data/sample-onboarding-requests.json'
         SyncAfterUpload       = $true
         CompanyPortalFallback = 'ms-windows-store://pdp/?productid=9WZDNCRFJ3PZ'
         WorkSchoolUri         = 'ms-settings:workplace'
+        FutureConnectors      = [ordered]@{
+            SharePointEnabled = $false
+            AzureIdentityEnabled = $false
+            IntuneTicketLinkEnabled = $false
+        }
     }
 }
 
@@ -69,6 +75,7 @@ function Import-ToolSettings {
 
     $merged.OutputDir = Resolve-ToolPathSetting -BasePath $BasePath -Value $merged.OutputDir
     $merged.LogDir = Resolve-ToolPathSetting -BasePath $BasePath -Value $merged.LogDir
+    $merged.OnboardingDataPath = Resolve-ToolPathSetting -BasePath $BasePath -Value $merged.OnboardingDataPath
 
     foreach ($dir in @($merged.OutputDir, $merged.LogDir)) {
         if (-not (Test-Path -Path $dir)) {

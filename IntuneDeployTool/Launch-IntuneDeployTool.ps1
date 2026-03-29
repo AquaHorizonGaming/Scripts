@@ -31,6 +31,7 @@ $basePath = Split-Path -Parent $MyInvocation.MyCommand.Path
 . (Join-Path $basePath 'modules/Actions.ps1')
 . (Join-Path $basePath 'modules/UiHelpers.ps1')
 . (Join-Path $basePath 'modules/Validation.ps1')
+. (Join-Path $basePath 'modules/Onboarding.ps1')
 
 
 try {
@@ -61,6 +62,8 @@ $script:Session = @{
     Capture = $null
     Upload = $null
     ImportStatus = $null
+    OnboardingRequests = @()
+    SelectedOnboardingRequest = $null
 }
 
 $form = New-Object System.Windows.Forms.Form
@@ -85,8 +88,10 @@ $tabActions = New-Object System.Windows.Forms.TabPage
 $tabActions.Text = 'Actions'
 $tabLogs = New-Object System.Windows.Forms.TabPage
 $tabLogs.Text = 'Logs'
+$tabOnboarding = New-Object System.Windows.Forms.TabPage
+$tabOnboarding.Text = 'Onboarding Requests'
 
-$tabs.TabPages.AddRange(@($tabDevice,$tabCapture,$tabGraph,$tabExport,$tabActions,$tabLogs))
+$tabs.TabPages.AddRange(@($tabDevice,$tabCapture,$tabGraph,$tabExport,$tabActions,$tabOnboarding,$tabLogs))
 $form.Controls.Add($tabs)
 
 $statusLabel = New-UiStatusLabel -X 10 -Y 680 -W 940
@@ -197,6 +202,25 @@ $btnOpenLog.Anchor = 'Bottom,Left'
 $tabLogs.Controls.AddRange(@($txtLogs,$btnRefreshLogs,$btnOpenLog))
 Set-GuiLogTextBox -TextBox $txtLogs
 
+# Onboarding tab
+$lblRequestSource = New-UiLabel -Text 'Request Data:' -X 10 -Y 14 -W 90
+$txtRequestSource = New-UiTextBox -X 110 -Y 10 -W 560
+$txtRequestSource.Text = $settings.OnboardingDataPath
+$btnLoadRequests = New-UiButton -Text 'Load Requests' -X 680 -Y 8 -W 120 -H 26
+$btnUseSampleRequests = New-UiButton -Text 'Use Sample Path' -X 810 -Y 8 -W 120 -H 26
+
+$lstRequests = New-Object System.Windows.Forms.ListBox
+$lstRequests.Left = 10; $lstRequests.Top = 45; $lstRequests.Width = 300; $lstRequests.Height = 565
+$lstRequests.Anchor = 'Top,Bottom,Left'
+
+$txtRequestDetails = New-UiTextBox -X 320 -Y 45 -W 610 -H 260 -Multiline $true -ReadOnly $true
+$txtRequestDetails.Anchor = 'Top,Left,Right'
+
+$txtTaskDetails = New-UiTextBox -X 320 -Y 315 -W 610 -H 295 -Multiline $true -ReadOnly $true
+$txtTaskDetails.Anchor = 'Top,Bottom,Left,Right'
+
+$tabOnboarding.Controls.AddRange(@($lblRequestSource,$txtRequestSource,$btnLoadRequests,$btnUseSampleRequests,$lstRequests,$txtRequestDetails,$txtTaskDetails))
+
 function Set-Status([string]$text) {
     $statusLabel.Text = $text
 }
@@ -244,6 +268,28 @@ function Refresh-ExportPreview {
     $txtJsonPreview.Text = ($sessionObj | ConvertTo-Json -Depth 8)
 }
 
+function Refresh-OnboardingList {
+    $lstRequests.Items.Clear()
+    foreach ($req in $script:Session.OnboardingRequests) {
+        [void]$lstRequests.Items.Add(('{0} | {1} | {2}' -f $req.RequestId, $req.EmployeeName, $req.OverallStatus))
+    }
+}
+
+function Render-OnboardingRequest {
+    param(
+        [Parameter(Mandatory)]
+        [pscustomobject]$Request
+    )
+
+    $txtRequestDetails.Text = Convert-OnboardingRequestToDisplayText -Request $Request
+    $taskRows = Get-OnboardingTaskRows -Request $Request
+    $taskLines = @('Task Workflow View:', '-------------------')
+    foreach ($task in $taskRows) {
+        $taskLines += ('{0} | Status: {1} | Owner: {2}' -f $task.Task, $task.Status, $task.Owner)
+    }
+    $txtTaskDetails.Text = ($taskLines -join "`r`n")
+}
+
 $btnRefreshDevice.Add_Click({ Refresh-InventoryUi })
 $btnOpenOutput1.Add_Click({ Open-ToolOutputFolder -OutputDir $settings.OutputDir })
 $btnOpenOutput2.Add_Click({ Open-ToolOutputFolder -OutputDir $settings.OutputDir })
@@ -256,6 +302,45 @@ $chkAzureSignInTenant.Add_CheckedChanged({
         $cmbAuth.SelectedItem = 'Interactive delegated'
         $txtGraphStatus.Text = 'Azure sign-in tenant mode enabled. The next Connect action will open Microsoft sign-in and use the selected tenant context.'
     }
+})
+
+$btnUseSampleRequests.Add_Click({
+    $txtRequestSource.Text = Get-OnboardingSampleDataPath -BasePath $basePath
+})
+
+$btnLoadRequests.Add_Click({
+    try {
+        $requests = Import-OnboardingRequests -Path $txtRequestSource.Text
+        $script:Session.OnboardingRequests = @($requests)
+        $script:Session.SelectedOnboardingRequest = $null
+        Refresh-OnboardingList
+
+        if ($script:Session.OnboardingRequests.Count -gt 0) {
+            $lstRequests.SelectedIndex = 0
+        }
+        else {
+            $txtRequestDetails.Text = 'No requests found in source file.'
+            $txtTaskDetails.Text = ''
+        }
+
+        Set-Status "Loaded $($script:Session.OnboardingRequests.Count) onboarding request(s)."
+        Write-ToolLog -Level Info -Message "Loaded onboarding requests from $($txtRequestSource.Text). Count=$($script:Session.OnboardingRequests.Count)"
+    }
+    catch {
+        $msg = "Failed to load onboarding requests: $($_.Exception.Message)"
+        Set-Status $msg
+        Write-ToolLog -Level Error -Message $msg
+        Show-UiError -Message $msg
+    }
+})
+
+$lstRequests.Add_SelectedIndexChanged({
+    if ($lstRequests.SelectedIndex -lt 0) { return }
+    if ($lstRequests.SelectedIndex -ge $script:Session.OnboardingRequests.Count) { return }
+
+    $req = $script:Session.OnboardingRequests[$lstRequests.SelectedIndex]
+    $script:Session.SelectedOnboardingRequest = $req
+    Render-OnboardingRequest -Request $req
 })
 
 $btnCapture.Add_Click({
@@ -571,6 +656,8 @@ $btnOpenLog.Add_Click({
 
 Refresh-InventoryUi
 Refresh-ExportPreview
+$btnUseSampleRequests.PerformClick()
+$btnLoadRequests.PerformClick()
 $txtSummary.AppendText([Environment]::NewLine + [Environment]::NewLine + 'Reset/Wipe handoff guidance: Run a reset or wipe after successful import, then validate OOBE/ESP behavior in a new session.')
 
 [void]$form.ShowDialog()

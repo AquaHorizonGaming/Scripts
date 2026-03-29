@@ -1,0 +1,32 @@
+[
+  {
+    "RequestId": "REQ-2026-0001",
+    "EmployeeName": "Taylor Morgan",
+    "Department": "Finance",
+    "Title": "Financial Analyst",
+    "StartDate": "2026-04-08",
+    "Manager": "Avery Stone",
+    "ManagerValidation": "Completed",
+    "ITApproval": "Completed",
+    "IdentityCreation": "InProgress",
+    "StockPcAssignment": "Pending",
+    "ImageDeploy": "Pending",
+    "OverallStatus": "Open",
+    "Notes": "HR entered employee in ADP and submitted New User Setup request."
+  },
+  {
+    "RequestId": "REQ-2026-0002",
+    "EmployeeName": "Jordan Lee",
+    "Department": "Operations",
+    "Title": "Ops Coordinator",
+    "StartDate": "2026-04-15",
+    "Manager": "Harper Quinn",
+    "ManagerValidation": "Pending",
+    "ITApproval": "Pending",
+    "IdentityCreation": "Pending",
+    "StockPcAssignment": "Pending",
+    "ImageDeploy": "Pending",
+    "OverallStatus": "Open",
+    "Notes": "Awaiting manager validation before IT approval."
+  }
+]
