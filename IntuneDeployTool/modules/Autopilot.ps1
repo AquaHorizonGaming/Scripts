@@ -1,5 +1,26 @@
 Set-StrictMode -Version Latest
 
+function Test-ToolAutopilotCsvRow {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [pscustomobject]$CsvRow
+    )
+
+    $errors = @()
+    if ([string]::IsNullOrWhiteSpace($CsvRow.'Device Serial Number')) {
+        $errors += "CSV is missing required field 'Device Serial Number'."
+    }
+    if ([string]::IsNullOrWhiteSpace($CsvRow.'Hardware Hash')) {
+        $errors += "CSV is missing required field 'Hardware Hash'."
+    }
+
+    return [pscustomobject]@{
+        IsValid = ($errors.Count -eq 0)
+        Errors = $errors
+    }
+}
+
 function Invoke-ToolAutopilotCapture {
     [CmdletBinding()]
     param(
@@ -44,6 +65,11 @@ function Invoke-ToolAutopilotCapture {
     $csv = Import-Csv -Path $captureFile | Select-Object -First 1
     if (-not $csv) {
         throw "Capture CSV was written but empty: $captureFile"
+    }
+
+    $csvValidation = Test-ToolAutopilotCsvRow -CsvRow $csv
+    if (-not $csvValidation.IsValid) {
+        throw ($csvValidation.Errors -join ' ')
     }
 
     return [pscustomobject]@{

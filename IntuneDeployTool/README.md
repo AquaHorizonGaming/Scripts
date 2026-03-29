@@ -63,6 +63,7 @@ The tool is designed around:
 - `DeviceManagementServiceConfig.ReadWrite.All`
 
 ## Local hardware hash behavior
+- The collector file is bundled in-project: `powershell/Get-WindowsAutopilotInfo.ps1`.
 - Hardware hash is collected from local MDM bridge class:
   - `root/cimv2/mdm/dmmap:MDM_DevDetail_Ext01.DeviceHardwareData`
 - Output includes:
@@ -71,6 +72,11 @@ The tool is designed around:
   - Hardware Hash
   - Group Tag
   - Assigned User
+
+### Capture CSV required vs optional fields
+- **Required for upload:** `Device Serial Number`, `Hardware Hash`
+- **Optional / best effort:** `Windows Product ID`
+- The tool fails capture validation if required fields are missing.
 
 ## Group Tag behavior
 - Group Tag is included in the imported Autopilot identity payload.
