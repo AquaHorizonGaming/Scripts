@@ -117,6 +117,11 @@ $cmbAuth.Left = 100; $cmbAuth.Top = 10; $cmbAuth.Width = 220
 $cmbAuth.DropDownStyle = 'DropDownList'
 $cmbAuth.Items.AddRange(@('Auto','Interactive delegated','App-only certificate'))
 $cmbAuth.SelectedItem = if ($settings.DefaultAuthMode) { $settings.DefaultAuthMode } else { 'Auto' }
+$chkAzureSignInTenant = New-Object System.Windows.Forms.CheckBox
+$chkAzureSignInTenant.Left = 340
+$chkAzureSignInTenant.Top = 12
+$chkAzureSignInTenant.Width = 300
+$chkAzureSignInTenant.Text = 'Use Azure sign-in tenant (no stored IDs)'
 
 $lblTenant = New-UiLabel -Text 'Tenant ID:' -X 10 -Y 50
 $txtTenant = New-UiTextBox -X 130 -Y 45 -W 330
@@ -147,7 +152,7 @@ $grpPreview.Controls.AddRange(@($lblPrefix,$txtPrefix,$btnPreview,$txtPreview))
 
 $txtGraphStatus = New-UiTextBox -X 10 -Y 245 -W 920 -H 365 -Multiline $true -ReadOnly $true
 $txtGraphStatus.Anchor = 'Top,Bottom,Left,Right'
-$tabGraph.Controls.AddRange(@($lblAuth,$cmbAuth,$lblTenant,$txtTenant,$lblClient,$txtClient,$lblThumb,$txtThumb,$lblGroup,$txtGroup,$lblUpn,$txtUpn,$btnConnect,$btnUpload,$btnCheckStatus,$btnSync,$grpPreview,$txtGraphStatus))
+$tabGraph.Controls.AddRange(@($lblAuth,$cmbAuth,$chkAzureSignInTenant,$lblTenant,$txtTenant,$lblClient,$txtClient,$lblThumb,$txtThumb,$lblGroup,$txtGroup,$lblUpn,$txtUpn,$btnConnect,$btnUpload,$btnCheckStatus,$btnSync,$grpPreview,$txtGraphStatus))
 
 # Export tab
 $txtCsvPreview = New-UiTextBox -X 10 -Y 10 -W 920 -H 140 -Multiline $true -ReadOnly $true
@@ -242,6 +247,16 @@ function Refresh-ExportPreview {
 $btnRefreshDevice.Add_Click({ Refresh-InventoryUi })
 $btnOpenOutput1.Add_Click({ Open-ToolOutputFolder -OutputDir $settings.OutputDir })
 $btnOpenOutput2.Add_Click({ Open-ToolOutputFolder -OutputDir $settings.OutputDir })
+$chkAzureSignInTenant.Add_CheckedChanged({
+    $usePrompt = $chkAzureSignInTenant.Checked
+    $txtTenant.ReadOnly = $usePrompt
+    $txtClient.ReadOnly = $usePrompt
+    $txtThumb.ReadOnly = $usePrompt
+    if ($usePrompt) {
+        $cmbAuth.SelectedItem = 'Interactive delegated'
+        $txtGraphStatus.Text = 'Azure sign-in tenant mode enabled. The next Connect action will open Microsoft sign-in and use the selected tenant context.'
+    }
+})
 
 $btnCapture.Add_Click({
     try {
@@ -308,6 +323,10 @@ $btnConnect.Add_Click({
         $mode = [string]$cmbAuth.SelectedItem
         if (-not $mode) { $mode = 'Auto' }
 
+        if ($chkAzureSignInTenant.Checked) {
+            $mode = 'Interactive delegated'
+        }
+
         if ($mode -eq 'Auto') {
             $mode = if ($txtTenant.Text -and $txtClient.Text -and $txtThumb.Text) { 'App-only certificate' } else { 'Interactive delegated' }
         }
@@ -316,10 +335,17 @@ $btnConnect.Add_Click({
             $ctx = Connect-ToolGraphAppOnly -TenantId $txtTenant.Text -ClientId $txtClient.Text -CertificateThumbprint $txtThumb.Text
         }
         else {
-            $ctx = Connect-ToolGraphInteractive -TenantId $txtTenant.Text
+            $tenantForInteractive = if ($chkAzureSignInTenant.Checked) { '' } else { $txtTenant.Text }
+            $ctx = Connect-ToolGraphInteractive -TenantId $tenantForInteractive
         }
 
-        $txtGraphStatus.Text = "Connected to Graph.`r`nMode: $($ctx.AuthMode)`r`nTenant: $($ctx.TenantId)`r`nClient: $($ctx.ClientId)"
+        $txtGraphStatus.Text = @(
+            'Connected to Graph.'
+            "Mode: $($ctx.AuthMode)"
+            "Tenant: $($ctx.TenantId)"
+            "Client: $($ctx.ClientId)"
+            $(if ($chkAzureSignInTenant.Checked) { 'Tenant selected via Azure sign-in prompt.' } else { 'Tenant sourced from typed/config value when provided.' })
+        ) -join "`r`n"
         Set-Status 'Graph authentication succeeded.'
         Write-ToolLog -Level Info -Message "Graph connected via $($ctx.AuthMode)."
     }

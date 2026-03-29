@@ -51,6 +51,7 @@ The tool does **not** make permanent execution policy changes automatically.
 ### 1) Interactive delegated
 - Uses `Connect-MgGraph -Scopes DeviceManagementServiceConfig.ReadWrite.All`.
 - Recommended for technician/admin bench workflows.
+- Supports **Azure sign-in tenant mode** in the UI, which lets the technician sign in and select tenant context without storing Tenant ID / Client ID in app settings.
 
 ### 2) App-only certificate
 - Uses Tenant ID + Client ID + certificate thumbprint.

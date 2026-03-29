@@ -32,7 +32,6 @@ function Get-GraphModuleInstallGuidance {
 function Connect-ToolGraphInteractive {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
         [string]$TenantId
     )
 
@@ -42,7 +41,12 @@ function Connect-ToolGraphInteractive {
 
     Import-Module Microsoft.Graph.Authentication -ErrorAction Stop
     $scopes = @('DeviceManagementServiceConfig.ReadWrite.All')
-    Connect-MgGraph -TenantId $TenantId -Scopes $scopes -NoWelcome -ErrorAction Stop | Out-Null
+    if ([string]::IsNullOrWhiteSpace($TenantId)) {
+        Connect-MgGraph -Scopes $scopes -NoWelcome -ErrorAction Stop | Out-Null
+    }
+    else {
+        Connect-MgGraph -TenantId $TenantId -Scopes $scopes -NoWelcome -ErrorAction Stop | Out-Null
+    }
     $ctx = Get-MgContext
 
     $script:ToolGraphContext.Connected = $true
