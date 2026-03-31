@@ -1,0 +1,4 @@
+sku,card_name,set_name,card_number,rarity,finish,language,quantity,current_price,tcgplayer_product_id,tcgplayer_sku_id,tcgplayer_url,category,notes,delta
+ABC123,Lightning Bolt,Magic 2010,146,Common,Normal,English,5,2.50,12345,98765,https://www.tcgplayer.com/product/12345?sku=98765,MTG,,-2.50
+DEF456,Counterspell,Ice Age,62,Common,Normal,English,2,3.25,,,,MTG,,-3.25
+GHI789,Black Lotus,Unlimited Edition,233,Rare,Normal,English,0,14999.99,,,,MTG,out of stock example,-14999.99
